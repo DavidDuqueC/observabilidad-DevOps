@@ -16,8 +16,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # Entrar al directorio del proyecto en la instancia EC2 (ajústalo si tu carpeta tiene otro nombre)
-            cd ~/observabilidad-devops || cd ~/10-11-26 || cd ~
-            
+            cd ~/10-11-26/app
             # Actualizar el código fuente desde el repositorio
             git pull origin main
             
