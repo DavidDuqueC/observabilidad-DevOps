@@ -1,24 +1,28 @@
-name: Deploy Monitoring to EC2
+name: Deploy Flask App to EC2
 
 on:
   push:
+    branches:
+      - main
     paths:
-      - 'monitoring/**'
-  workflow_dispatch:  # Permite activarlo manualmente también si lo deseas
+      - 'app/**'
+  workflow_dispatch:
 
 jobs:
-  deploy-monitoring:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Connect to EC2 and Deploy Monitoring
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/10-11-26
+            cd ~/10-11-26/app
             git pull origin main
-            # Ajusta si tu comando o archivo de docker-compose para monitoreo tiene otro nombre o ruta
-            docker compose -f docker-compose.yml up -d prometheus grafana
+            docker compose down
+            docker compose up -d --build
