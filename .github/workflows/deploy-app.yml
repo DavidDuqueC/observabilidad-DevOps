@@ -28,4 +28,4 @@ jobs:
           context: ./app
           file: ./app/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}/app:latest
+          tags: ghcr.io/${{ github.repository_owner }}/observabilidad-devops/app:latest
