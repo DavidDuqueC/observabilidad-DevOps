@@ -1,0 +1,28 @@
+name: Deploy App to EC2
+
+on:
+  workflow_dispatch:  # Se activa manualmente desde la pestaña Actions
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Connect to EC2 and Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # Entrar al directorio del proyecto en la instancia EC2 (ajústalo si tu carpeta tiene otro nombre)
+            cd ~/observabilidad-devops || cd ~/10-11-26 || cd ~
+            
+            # Actualizar el código fuente desde el repositorio
+            git pull origin main
+            
+            # Descargar la última versión de la imagen desde GitHub Packages
+            docker compose pull app
+            
+            # Levantar únicamente el contenedor de la aplicación
+            docker compose up -d app
